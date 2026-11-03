@@ -12,5 +12,13 @@
   "type": "commonjs",
   "dependencies": {
     "angular": "^1.8.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d4mh25is020-pixel/MITM-ANGULARJS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/d4mh25is020-pixel/MITM-ANGULARJS/issues"
+  },
+  "homepage": "https://github.com/d4mh25is020-pixel/MITM-ANGULARJS#readme"
 }
