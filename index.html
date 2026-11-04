@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html ng-app="libraryApp">
+
+<head>
+    <title>My Library</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .header p {
+            margin-bottom: 0;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: #eef0ff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px;
+        }
+
+        .stat-card h2 {
+            color: #6655cc;
+            margin: 5px;
+        }
+
+        .section {
+            margin-top: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .book-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .book-card {
+            background: #f5f5ff;
+            border-left: 5px solid #764ba2;
+            padding: 20px;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px #ccc;
+        }
+
+        .book-card h3 {
+            color: #49368a;
+            margin-top: 5px;
+        }
+
+        .book-icon {
+            font-size: 30px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #888;
+        }
+
+        @media(max-width: 600px) {
+            .stats {
+                flex-direction: column;
+            }
+
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 18px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container" ng-controller="ParentController">
+
+    <!-- Header -->
+    <div class="header">
+        <h1>📚 My Digital Library</h1>
+        <p>Discover Knowledge, Explore Books</p>
+    </div>
+
+    <!-- Parent Controller -->
+    <div class="stats">
+
+        <div class="stat-card">
+            <h2>📖 {{books.length}}</h2>
+            <p>Total Books</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>🏛️</h2>
+            <p>{{libraryName}}</p>
+        </div>
+
+    </div>
+
+    <!-- Child Controller -->
+    <div class="section" ng-controller="ChildController">
+
+        <h2>➕ Add a New Book</h2>
+
+        <input type="text"
+               ng-model="newBook"
+               placeholder="Enter book name">
+
+        <button ng-click="addBook()">
+            + Add Book
+        </button>
+
+        <h2>🔍 Search Your Books</h2>
+
+        <input type="text"
+               ng-model="searchBook"
+               placeholder="Search books here...">
+
+        <h2>📚 Available Books</h2>
+
+        <div class="book-list">
+
+            <div class="book-card"
+                 ng-repeat="book in books | filter:searchBook">
+
+                <div class="book-icon">📕</div>
+
+                <h3>{{book}}</h3>
+
+                <p>Book No: {{$index + 1}}</p>
+
+                <p>Available in Library</p>
+
+            </div>
+
+        </div>
+
+        <p ng-if="(books | filter:searchBook).length == 0">
+            No books found!
+        </p>
+
+    </div>
+
+    <div class="footer">
+        <p>✨ Your Knowledge Hub | Library Management System ✨</p>
+    </div>
+
+</div>
+
+<script>
+
+// Create AngularJS Application
+var app = angular.module("libraryApp", []);
+
+// Parent Controller
+app.controller("ParentController", function($scope) {
+
+    $scope.libraryName = "Central Library";
+
+    $scope.books = [
+        "HTML and CSS",
+        "JavaScript",
+        "Python Programming",
+        "Java Programming",
+        "C Programming",
+        "Data Structures",
+        "Computer Networks",
+        "Database Management"
+    ];
+
+});
+
+// Child Controller
+app.controller("ChildController", function($scope) {
+
+    $scope.newBook = "";
+
+    $scope.searchBook = "";
+
+    $scope.addBook = function() {
+
+        if ($scope.newBook.trim() !== "") {
+
+            $scope.books.push($scope.newBook.trim());
+
+            $scope.newBook = "";
+
+        } else {
+
+            alert("Please enter a book name!");
+
+        }
+
+    };
+
+});
+
+</script>
+
+</body>
+</html>
